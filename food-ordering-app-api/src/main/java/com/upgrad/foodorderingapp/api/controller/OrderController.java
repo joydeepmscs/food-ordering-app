@@ -5,8 +5,7 @@ import com.upgrad.foodorderingapp.service.businness.CustomerService;
 import com.upgrad.foodorderingapp.service.businness.OrderService;
 import com.upgrad.foodorderingapp.service.common.FoodAppUtil;
 import com.upgrad.foodorderingapp.service.entity.*;
-import com.upgrad.foodorderingapp.service.exception.AuthorizationFailedException;
-import com.upgrad.foodorderingapp.service.exception.CouponNotFoundException;
+import com.upgrad.foodorderingapp.service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.upgrad.foodorderingapp.service.common.FoodAppUtil.getAccessToken;
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
 
 @RestController
 public class OrderController {
@@ -121,5 +121,66 @@ public class OrderController {
 //            pastOrderResponse.setOrders(new ArrayList<OrderList>());
 //        }
 //        return new ResponseEntity<CustomerOrderResponse>(pastOrderResponse, HttpStatus.OK);
+//    }
+
+//    @RequestMapping(method=RequestMethod.POST, path="/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    public ResponseEntity<SaveOrderResponse> saveOrder(@RequestHeader("authorization") final String authorization, @RequestBody SaveOrderRequest saveOrderRequest) throws AuthorizationFailedException, AddressNotFoundException, CouponNotFoundException, ItemNotFoundException, PaymentMethodNotFoundException, RestaurantNotFoundException {
+//        String accessToken = getAccessToken(authorization);
+//        customerService.getCustomer(accessToken);
+//
+//        CouponEntity coupon = null;
+//        PaymentEntity payment = null;
+//        AddressEntity address = null;
+//        RestaurantEntity restaurant = null;
+//        if(saveOrderRequest.getCouponId() != null) {
+//            coupon = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
+//        }
+//        if(saveOrderRequest.getPaymentId() != null) {
+//            payment = paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
+//        }
+//        else {
+//            throw new PaymentMethodNotFoundException(PNF_002.getCode(), PNF_002.getDefaultMessage());
+//        }
+//        if (saveOrderRequest.getAddressId() != null) {
+//            address = addressService.getAddressByUUID(saveOrderRequest.getAddressId(), loggedInCustomer);
+//        }
+//        else {
+//            throw new AddressNotFoundException(ANF_003.getCode(), ANF_003.getDefaultMessage());
+//        }
+//        if (saveOrderRequest.getRestaurantId() != null) {
+//            restaurant = restaurantService
+//                    .restaurantByUUID(saveOrderRequest.getRestaurantId().toString());
+//        }
+//        else {
+//            throw new RestaurantNotFoundException(RNF_001.getCode(), RNF_001.getDefaultMessage());
+//        }
+//        OrderEntity order = new OrderEntity();
+//        order.setCustomer(loggedInCustomer);
+//        order.setCoupon(coupon);
+//        order.setAddress(address);
+//        order.setPayment(payment);
+//        order.setRestaurant(restaurant);
+//        order.setBill(saveOrderRequest.getBill() != null ?
+//                saveOrderRequest.getBill().doubleValue() : null);
+//        order.setDiscount(saveOrderRequest.getDiscount() != null ?
+//                saveOrderRequest.getDiscount().doubleValue() : null);
+//        final OrderEntity savedOrder = orderService.saveOrder(order);
+//
+//        List<ItemQuantity> itemQuantities = saveOrderRequest.getItemQuantities();
+//        if (itemQuantities != null && !itemQuantities.isEmpty()) {
+//            for (ItemQuantity itemQuantity : itemQuantities) {
+//                ItemEntity item = itemService.getItemByUUID(String.valueOf(itemQuantity.getItemId()));
+//                OrderItemEntity orderItem = new OrderItemEntity();
+//                orderItem.setItem(item);
+//                orderItem.setOrder(savedOrder);
+//                orderItem.setQuantity(itemQuantity.getQuantity());
+//                orderItem.setPrice(itemQuantity.getPrice());
+//                orderService.saveOrderItem(orderItem);
+//            }
+//        }
+//
+//        SaveOrderResponse response = new SaveOrderResponse();
+//        response.id(savedOrder.getUuid()).status("ORDER SUCCESSFULLY PLACED");
+//        return new ResponseEntity<SaveOrderResponse>(response, HttpStatus.CREATED);
 //    }
 }

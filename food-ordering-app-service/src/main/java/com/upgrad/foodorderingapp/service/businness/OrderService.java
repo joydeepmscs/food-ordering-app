@@ -8,8 +8,12 @@ import com.upgrad.foodorderingapp.service.entity.OrderEntity;
 import com.upgrad.foodorderingapp.service.exception.CouponNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
 
@@ -40,4 +44,14 @@ public class OrderService {
 //    public List<ItemEntity> getOrderItemsByOrderId(Integer orderId) {
 //        return itemDao.getItemsByOrderId(orderId);
 //    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public OrderEntity saveOrder(OrderEntity order) {
+        order.setUuid(UUID.randomUUID().toString());
+        order.setDate(new Date());
+        // Set the status of address to archive
+//        order.getAddress().setActive(0);
+        orderDao.saveOrderDetail(order);
+        return order;
+    }
 }

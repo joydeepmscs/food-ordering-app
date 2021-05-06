@@ -39,4 +39,9 @@ public class OrderDao {
 //        return entityManager.createNamedQuery("itemsByOrderId", ItemEntity.class)
 //                .setParameter("id", orderId).getResultList();
 //    }
+
+    public OrderEntity saveOrderDetail(OrderEntity order) {
+        entityManager.persist(order);
+        return order;
+    }
 }
