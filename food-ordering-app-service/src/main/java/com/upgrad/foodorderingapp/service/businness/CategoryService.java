@@ -40,12 +40,12 @@ public class CategoryService {
      */
     public CategoryEntity getCategoryById(String categoryUuid) throws CategoryNotFoundException {
         if (categoryUuid==null || categoryUuid=="") {
-            throw new CategoryNotFoundException("CNF-001", "Category id field should not be empty");
+            throw new CategoryNotFoundException(CNF_001.getCode(), CNF_001.getDefaultMessage());
         }
         CategoryEntity categoryEntity = categoryDao.getCategoryById(categoryUuid);
 
         if (categoryEntity == null) {
-            throw new CategoryNotFoundException("CNF-002", "No category by this id");
+            throw new CategoryNotFoundException(CNF_002.getCode(), CNF_002.getDefaultMessage());
         }
         return categoryEntity;
 

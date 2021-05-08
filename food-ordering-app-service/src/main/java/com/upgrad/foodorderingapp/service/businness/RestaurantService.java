@@ -65,13 +65,13 @@ public class RestaurantService {
     public List<RestaurantEntity> restaurantByCategory(final String categoryUuid) throws CategoryNotFoundException {
         // Throw exception if the category uuid is empty
         if (categoryUuid.isEmpty()) {
-            throw new CategoryNotFoundException("CNF-001", "Category id field should not be empty");
+            throw new CategoryNotFoundException(CNF_001.getCode(), CNF_001.getDefaultMessage());
         }
 
         CategoryEntity categoryEntity = categoryDao.getCategoryById(categoryUuid);
         // Throw exception if no category exists for the give category uuid
         if (categoryEntity == null) {
-            throw new CategoryNotFoundException("CNF-002", "No category by this id");
+            throw new CategoryNotFoundException(CNF_002.getCode(), CNF_002.getDefaultMessage());
         }
 
         List<RestaurantEntity> restaurantEntities = new ArrayList<>();
