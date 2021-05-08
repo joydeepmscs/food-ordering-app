@@ -1,5 +1,5 @@
 package com.upgrad.foodorderingapp.service.businness;
-import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
+
 import com.upgrad.foodorderingapp.service.dao.CategoryDao;
 import com.upgrad.foodorderingapp.service.dao.ItemDao;
 import com.upgrad.foodorderingapp.service.entity.CategoryItemEntity;
@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.INF_003;
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.RNF_001;
 
 @Service
 public class ItemService {

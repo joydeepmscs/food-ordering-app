@@ -1,15 +1,17 @@
 package com.upgrad.foodorderingapp.api.controller;
-import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.upgrad.foodorderingapp.api.model.*;
 import com.upgrad.foodorderingapp.service.businness.CategoryService;
 import com.upgrad.foodorderingapp.service.businness.CustomerService;
 import com.upgrad.foodorderingapp.service.businness.ItemService;
 import com.upgrad.foodorderingapp.service.businness.RestaurantService;
 import com.upgrad.foodorderingapp.service.common.Constants;
+import com.upgrad.foodorderingapp.service.common.FoodAppUtil;
 import com.upgrad.foodorderingapp.service.common.ItemType;
-import com.upgrad.foodorderingapp.service.entity.*;
+import com.upgrad.foodorderingapp.service.entity.CategoryEntity;
+import com.upgrad.foodorderingapp.service.entity.CustomerEntity;
+import com.upgrad.foodorderingapp.service.entity.ItemEntity;
+import com.upgrad.foodorderingapp.service.entity.RestaurantEntity;
 import com.upgrad.foodorderingapp.service.exception.AuthorizationFailedException;
 import com.upgrad.foodorderingapp.service.exception.CategoryNotFoundException;
 import com.upgrad.foodorderingapp.service.exception.InvalidRatingException;
@@ -20,7 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.upgrad.foodorderingapp.service.common.FoodAppUtil;
+
 import java.math.BigDecimal;
 import java.util.*;
 @CrossOrigin

@@ -1,9 +1,7 @@
 package com.upgrad.foodorderingapp.service.dao;
 
-import com.upgrad.foodorderingapp.service.entity.CustomerAuthEntity;
 import com.upgrad.foodorderingapp.service.entity.RestaurantCategoryEntity;
 import com.upgrad.foodorderingapp.service.entity.RestaurantEntity;
-import com.upgrad.foodorderingapp.service.entity.RestaurantItemEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

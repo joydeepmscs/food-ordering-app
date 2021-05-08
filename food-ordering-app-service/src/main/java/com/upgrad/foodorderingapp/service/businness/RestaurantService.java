@@ -1,10 +1,11 @@
 package com.upgrad.foodorderingapp.service.businness;
 
+import com.upgrad.foodorderingapp.service.common.FoodAppUtil;
 import com.upgrad.foodorderingapp.service.dao.CategoryDao;
-import com.upgrad.foodorderingapp.service.dao.CustomerDao;
 import com.upgrad.foodorderingapp.service.dao.RestaurantDao;
-import com.upgrad.foodorderingapp.service.entity.*;
-import com.upgrad.foodorderingapp.service.exception.AuthorizationFailedException;
+import com.upgrad.foodorderingapp.service.entity.CategoryEntity;
+import com.upgrad.foodorderingapp.service.entity.RestaurantCategoryEntity;
+import com.upgrad.foodorderingapp.service.entity.RestaurantEntity;
 import com.upgrad.foodorderingapp.service.exception.CategoryNotFoundException;
 import com.upgrad.foodorderingapp.service.exception.InvalidRatingException;
 import com.upgrad.foodorderingapp.service.exception.RestaurantNotFoundException;
@@ -16,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.ref.PhantomReference;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class RestaurantService {
      * @throws RestaurantNotFoundException - if the restaurant name is empty
      */
     public List<RestaurantEntity> restaurantsByName(final String restaurantName) throws RestaurantNotFoundException{
-        if(restaurantName==null || restaurantName==""){
+        if(FoodAppUtil.isEmptyField(restaurantName)){
             throw new RestaurantNotFoundException(RNF_003.getCode(), RNF_003.getDefaultMessage());
         }
         List<RestaurantEntity> restaurantEntity = restaurantDao.getRestaurantByName(restaurantName);
@@ -69,7 +68,7 @@ public class RestaurantService {
      * @throws RestaurantNotFoundException - if no restaurant in found in the database for the given restaurant uuid
      */
     public RestaurantEntity restaurantByUUID(final String restaurantId) throws RestaurantNotFoundException{
-        if(restaurantId==null || restaurantId=="") {
+        if(FoodAppUtil.isEmptyField(restaurantId)) {
             throw new RestaurantNotFoundException(RNF_003.getCode(), RNF_003.getDefaultMessage());
         }
         RestaurantEntity restaurantEntity=restaurantDao.getRestaurantById(restaurantId);
@@ -106,7 +105,7 @@ public class RestaurantService {
      */
     public List<RestaurantEntity> restaurantByCategory(final String categoryUuid) throws CategoryNotFoundException {
         // Throw exception if the category uuid is empty
-        if (categoryUuid.isEmpty()) {
+        if (FoodAppUtil.isEmptyField(categoryUuid)) {
             throw new CategoryNotFoundException(CNF_001.getCode(), CNF_001.getDefaultMessage());
         }
 
