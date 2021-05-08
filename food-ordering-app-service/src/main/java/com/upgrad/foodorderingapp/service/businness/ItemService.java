@@ -1,11 +1,12 @@
 package com.upgrad.foodorderingapp.service.businness;
-import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
+
 import com.upgrad.foodorderingapp.service.dao.CategoryDao;
 import com.upgrad.foodorderingapp.service.dao.ItemDao;
 import com.upgrad.foodorderingapp.service.entity.CategoryItemEntity;
 import com.upgrad.foodorderingapp.service.entity.ItemEntity;
 import com.upgrad.foodorderingapp.service.entity.RestaurantEntity;
 import com.upgrad.foodorderingapp.service.entity.RestaurantItemEntity;
+import com.upgrad.foodorderingapp.service.exception.ItemNotFoundException;
 import com.upgrad.foodorderingapp.service.exception.RestaurantNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.INF_003;
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.RNF_001;
 
 @Service
 public class ItemService {
@@ -25,6 +29,13 @@ public class ItemService {
     @Autowired
     private CategoryDao categoryDao;
 
+    /**
+     * Method tp retrieve item details using restaurant Id
+     *
+     * @param  restaurantEntity - restaurant entity object
+     * @return ItemEntity- item entity top 5
+     * @throws RestaurantNotFoundException - if no ItemEntity is found in the databse for the given item uuid
+     */
     public List<ItemEntity> getItemsByPopularity(final RestaurantEntity restaurantEntity) throws RestaurantNotFoundException{
         List<RestaurantItemEntity> restaurantItemEntities = itemDao.getItemForRestaurantUUID(restaurantEntity.getUuid());
         if(restaurantItemEntities.size()<1){
@@ -39,6 +50,12 @@ public class ItemService {
         return itemEntityList;
     }
 
+    /**
+     * Method to get top5 based on sorting
+     *
+     * @param  restaurantItemEntities - restaurant entity object
+     * @return RestaurantItemEntity- item entity top 5
+     */
     private   List<RestaurantItemEntity> getTop5(List<RestaurantItemEntity> restaurantItemEntities){
         HashMap<Integer,Integer> hmap= new HashMap<Integer,Integer>();
         for(RestaurantItemEntity rt:restaurantItemEntities){
@@ -68,6 +85,13 @@ public class ItemService {
         return finalList;
     }
 
+    /**
+     * Method to get items by category and restaruarnt
+     *
+     * @param  restaurantID - restaurant ID
+     * @param  categoryId - category id
+     * @return RestaurantItemEntity- item entity top 5
+     */
     public List<ItemEntity> getItemsByCategoryAndRestaurant(final String restaurantID,final String categoryId){
         List<RestaurantItemEntity> restaurantItemEntities = itemDao.getItemForRestaurantUUID(restaurantID);
         List<CategoryItemEntity> categoryItemEntities = categoryDao.getAllCategoryItems(categoryId);
@@ -82,6 +106,14 @@ public class ItemService {
                 itemEntityList.add(ct.getItemEntity());
         }
         return itemEntityList;
+    }
+
+    public ItemEntity getItemByUUID(String itemUuid) throws ItemNotFoundException {
+        ItemEntity itemEntity = itemDao.getItemByUUID(itemUuid);
+        if(itemEntity == null){
+            throw new ItemNotFoundException(INF_003.getCode(), INF_003.getDefaultMessage());
+        }
+        return itemEntity;
     }
 
 }

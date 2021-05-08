@@ -23,7 +23,7 @@ public class FoodAppUtil {
             if (bearerToken.length != 2) {
                 throw new AuthorizationFailedException(ATHR_001.getCode(), ATHR_001.getDefaultMessage());
             }
-        } catch (AuthorizationFailedException e) {
+        } catch (Exception e) {
             throw new AuthorizationFailedException(ATHR_001.getCode(), ATHR_001.getDefaultMessage());
         }
         return bearerToken[1];
