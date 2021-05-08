@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/category")
+@RequestMapping("")
 public class CategoryController {
 
     @Autowired
@@ -33,7 +34,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @RequestMapping(method = RequestMethod.GET,path = "",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.GET,path = "/category",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CategoriesListResponse> getAllCategoriesOrderedByName() throws CategoryNotFoundException {
         List<CategoryEntity> allCategories = categoryService.getAllCategoriesOrderedByName();
         CategoriesListResponse categoriesListResponse=new CategoriesListResponse();
@@ -54,7 +55,7 @@ public class CategoryController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{category_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.GET, path = "/category/{category_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CategoryDetailsResponse> getCategoryById(@PathVariable String category_id) throws CategoryNotFoundException {
         CategoryEntity categoryEntity = categoryService.getCategoryById(category_id);
         List<ItemEntity> itemEntities = categoryEntity.getItems();

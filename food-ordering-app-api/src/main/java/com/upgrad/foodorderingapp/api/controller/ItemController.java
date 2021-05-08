@@ -19,17 +19,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/item/restaurant")
+@RequestMapping("")
 public class ItemController {
     @Autowired
     private ModelMapper modelMapper;
@@ -39,7 +38,7 @@ public class ItemController {
     @Autowired
     private RestaurantService restaurantService;
 
-    @RequestMapping(method = RequestMethod.GET,path = "/{restaurant_id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.GET,path = "/item/restaurant//{restaurant_id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ItemListResponse> getAllRestaurants(@PathVariable final String restaurant_id) throws RestaurantNotFoundException {
         RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(restaurant_id);
         List<ItemEntity> itemEntityList = itemService.getItemsByPopularity(restaurantEntity);
