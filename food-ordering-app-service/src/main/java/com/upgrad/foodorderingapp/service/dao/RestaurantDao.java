@@ -49,5 +49,9 @@ public class RestaurantDao {
                 .getResultList();
     }
 
+    public void updateCustomerRating(RestaurantEntity restaurantEntity){
+        entityManager.merge(restaurantEntity);
+    }
+
 
 }

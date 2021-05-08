@@ -1,12 +1,18 @@
 package com.upgrad.foodorderingapp.api.controller;
 import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
+
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.upgrad.foodorderingapp.api.model.*;
 import com.upgrad.foodorderingapp.service.businness.CategoryService;
+import com.upgrad.foodorderingapp.service.businness.CustomerService;
 import com.upgrad.foodorderingapp.service.businness.ItemService;
 import com.upgrad.foodorderingapp.service.businness.RestaurantService;
+import com.upgrad.foodorderingapp.service.common.Constants;
 import com.upgrad.foodorderingapp.service.common.ItemType;
 import com.upgrad.foodorderingapp.service.entity.*;
+import com.upgrad.foodorderingapp.service.exception.AuthorizationFailedException;
 import com.upgrad.foodorderingapp.service.exception.CategoryNotFoundException;
+import com.upgrad.foodorderingapp.service.exception.InvalidRatingException;
 import com.upgrad.foodorderingapp.service.exception.RestaurantNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.upgrad.foodorderingapp.service.common.FoodAppUtil;
 import java.math.BigDecimal;
 import java.util.*;
 @CrossOrigin
@@ -28,6 +34,8 @@ public class RestaurantController {
     private RestaurantService restaurantService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private CustomerService customerService;
 
     @Autowired
     private ItemService itemService;
@@ -54,12 +62,15 @@ public class RestaurantController {
         return new ResponseEntity<RestaurantListResponse>(restaurantListResponse, HttpStatus.OK);
     }
 
-    /*@RequestMapping(method = RequestMethod.PUT, path = "/category/{category_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RestaurantListResponse> restaurantByUUID( @PathVariable String category_id) throws CategoryNotFoundException {
-        List<RestaurantEntity> restaurantEntities = restaurantService.restaurantByCategory(category_id);
-        RestaurantListResponse restaurantListResponse = getRestaurantCategoryDetails(restaurantEntities);
-        return new ResponseEntity<RestaurantListResponse>(restaurantListResponse, HttpStatus.OK);
-    }*/
+    @RequestMapping(method = RequestMethod.PUT, path = "/restaurant/{restaurantId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<RestaurantUpdatedResponse> restaurantByUUID( @RequestHeader("authorization") final String authorization,@RequestParam("customer_rating") Double customerRating,@PathVariable String restaurantId) throws AuthorizationFailedException,InvalidRatingException,RestaurantNotFoundException {
+        String accessToken=FoodAppUtil.getAccessToken(authorization);
+        CustomerEntity customerEntity=customerService.getCustomer(accessToken);
+        RestaurantEntity restaurantEntity=restaurantService.restaurantByUUID(restaurantId);
+        RestaurantEntity updateRestaurantRating = restaurantService.updateRestaurantRating(restaurantEntity,customerRating);
+        RestaurantUpdatedResponse updatedResponse=new RestaurantUpdatedResponse().id(UUID.fromString(restaurantId)).status(Constants.UPDATE_RATING_MESSAGE);
+        return new ResponseEntity<RestaurantUpdatedResponse>(updatedResponse, HttpStatus.OK);
+    }
 
 
     @RequestMapping(method = RequestMethod.GET,path = "/restaurant/{restaurant_id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

@@ -1,13 +1,14 @@
 package com.upgrad.foodorderingapp.service.businness;
 
 import com.upgrad.foodorderingapp.service.dao.CategoryDao;
+import com.upgrad.foodorderingapp.service.dao.CustomerDao;
 import com.upgrad.foodorderingapp.service.dao.RestaurantDao;
-import com.upgrad.foodorderingapp.service.entity.CategoryEntity;
-import com.upgrad.foodorderingapp.service.entity.RestaurantCategoryEntity;
-import com.upgrad.foodorderingapp.service.entity.RestaurantEntity;
-import com.upgrad.foodorderingapp.service.entity.RestaurantItemEntity;
+import com.upgrad.foodorderingapp.service.entity.*;
+import com.upgrad.foodorderingapp.service.exception.AuthorizationFailedException;
 import com.upgrad.foodorderingapp.service.exception.CategoryNotFoundException;
+import com.upgrad.foodorderingapp.service.exception.InvalidRatingException;
 import com.upgrad.foodorderingapp.service.exception.RestaurantNotFoundException;
+import org.decimal4j.util.DoubleRounder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.ref.PhantomReference;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,9 @@ public class RestaurantService {
 
     @Autowired
     private CategoryDao categoryDao;
+
+    @Autowired
+    private CustomerService customerService;
 
     private final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
@@ -52,6 +58,18 @@ public class RestaurantService {
         RestaurantEntity restaurantEntity=restaurantDao.getRestaurantById(restaurantId);
         if(restaurantEntity==null)
             throw new RestaurantNotFoundException(RNF_001.getCode(), RNF_001.getDefaultMessage());
+        return restaurantEntity;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public RestaurantEntity updateRestaurantRating(RestaurantEntity restaurantEntity,final Double customerRating) throws InvalidRatingException {
+        if(customerRating<1 || customerRating>5){
+            throw new InvalidRatingException(IRE_001.getCode(), IRE_001.getDefaultMessage());
+        }
+        Double totalSum = restaurantEntity.getCustomerRating()*restaurantEntity.getNumberCustomersRated();
+        restaurantEntity.setNumberCustomersRated(restaurantEntity.getNumberCustomersRated()+1);
+        restaurantEntity.setCustomerRating(DoubleRounder.round((totalSum+customerRating)/restaurantEntity.getNumberCustomersRated(),2));
+        restaurantDao.updateCustomerRating(restaurantEntity);
         return restaurantEntity;
     }
 

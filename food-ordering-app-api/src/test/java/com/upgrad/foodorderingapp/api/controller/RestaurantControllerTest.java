@@ -251,7 +251,7 @@ public class RestaurantControllerTest {
         verify(mockRestaurantService, times(1)).restaurantsByRating();
         verify(mockCategoryService, times(1)).getCategoriesByRestaurant(restaurantEntity.getUuid());
     }
-/*
+
 
     // ------------------------------------------ PUT /restaurant/{restaurant_id} ------------------------------------------
 
@@ -433,7 +433,7 @@ public class RestaurantControllerTest {
     }
 
     // ------------------------------------------ POJO builders ------------------------------------------
-*/
+
     private ItemEntity getItemEntity() {
         final ItemEntity itemEntity = new ItemEntity();
         final String itemId = UUID.randomUUID().toString();
