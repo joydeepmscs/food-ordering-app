@@ -25,6 +25,13 @@ public class ItemService {
     @Autowired
     private CategoryDao categoryDao;
 
+    /**
+     * Method tp retrieve item details using restaurant Id
+     *
+     * @param  restaurantEntity - restaurant entity object
+     * @return ItemEntity- item entity top 5
+     * @throws RestaurantNotFoundException - if no ItemEntity is found in the databse for the given item uuid
+     */
     public List<ItemEntity> getItemsByPopularity(final RestaurantEntity restaurantEntity) throws RestaurantNotFoundException{
         List<RestaurantItemEntity> restaurantItemEntities = itemDao.getItemForRestaurantUUID(restaurantEntity.getUuid());
         if(restaurantItemEntities.size()<1){
@@ -39,6 +46,12 @@ public class ItemService {
         return itemEntityList;
     }
 
+    /**
+     * Method to get top5 based on sorting
+     *
+     * @param  restaurantItemEntities - restaurant entity object
+     * @return RestaurantItemEntity- item entity top 5
+     */
     private   List<RestaurantItemEntity> getTop5(List<RestaurantItemEntity> restaurantItemEntities){
         HashMap<Integer,Integer> hmap= new HashMap<Integer,Integer>();
         for(RestaurantItemEntity rt:restaurantItemEntities){
@@ -68,6 +81,13 @@ public class ItemService {
         return finalList;
     }
 
+    /**
+     * Method to get items by category and restaruarnt
+     *
+     * @param  restaurantID - restaurant ID
+     * @param  categoryId - category id
+     * @return RestaurantItemEntity- item entity top 5
+     */
     public List<ItemEntity> getItemsByCategoryAndRestaurant(final String restaurantID,final String categoryId){
         List<RestaurantItemEntity> restaurantItemEntities = itemDao.getItemForRestaurantUUID(restaurantID);
         List<CategoryItemEntity> categoryItemEntities = categoryDao.getAllCategoryItems(categoryId);

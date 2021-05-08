@@ -51,6 +51,12 @@ public class CategoryService {
 
     }
 
+    /**
+     * Get  List of Category Entities using restaurant uuid
+     *
+     * @param restaurantId - String represents restaurant uuid
+     * @return - List of Category Entities using restaurant uuid
+     */
     public List<CategoryEntity> getCategoriesByRestaurant(final String restaurantId){
         List<RestaurantCategoryEntity> restaurantCategoryEntities  = categoryDao.getAllCategoriesByRestaurant(restaurantId);
         List<CategoryEntity> categories = new ArrayList<CategoryEntity>();
