@@ -51,7 +51,7 @@ public class CustomerController {
         }
         final CustomerEntity customerEntity = convertToCustomerEntity(signupCustomerRequest);
         final CustomerEntity createdCustomerEntity = customerService.saveCustomer(customerEntity);
-        SignupCustomerResponse customerResponse = new SignupCustomerResponse().id(createdCustomerEntity.getUuid()).status(Constants.CUSTOMER_REGISTRATION_MESSAGE);
+        final SignupCustomerResponse customerResponse = new SignupCustomerResponse().id(createdCustomerEntity.getUuid()).status(Constants.CUSTOMER_REGISTRATION_MESSAGE);
         return new ResponseEntity<SignupCustomerResponse>(customerResponse, HttpStatus.CREATED);
     }
 
@@ -78,15 +78,15 @@ public class CustomerController {
 
         }
 
-        CustomerAuthEntity authEntity = customerService.authenticate(contactNumber, password);
-        CustomerEntity customer = authEntity.getCustomer();
-        LoginResponse loginResponse = new LoginResponse().id(customer.getUuid()).message(Constants.LOGIN_MESSAGE)
+        final CustomerAuthEntity authEntity = customerService.authenticate(contactNumber, password);
+        final CustomerEntity customer = authEntity.getCustomer();
+        final LoginResponse loginResponse = new LoginResponse().id(customer.getUuid()).message(Constants.LOGIN_MESSAGE)
                 .firstName(customer.getFirstName())
                 .lastName(customer.getLastName())
                 .emailAddress(customer.getEmailAddress())
                 .contactNumber(customer.getContactNumber());
 
-        HttpHeaders headers = new HttpHeaders();
+        final HttpHeaders headers = new HttpHeaders();
         headers.add("access-token", authEntity.getAccessToken());
         return new ResponseEntity<LoginResponse>(loginResponse, headers, HttpStatus.OK);
 
@@ -101,11 +101,11 @@ public class CustomerController {
      */
     @RequestMapping(method = RequestMethod.POST, path = "/logout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<LogoutResponse> signout(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
-        String accessToken= getAccessToken(authorization);
+        final String accessToken= getAccessToken(authorization);
         final CustomerAuthEntity customerAuthEntity = customerService.logout(accessToken);
         final CustomerEntity customerEntity = customerAuthEntity.getCustomer();
 
-        LogoutResponse logoutResponse = new LogoutResponse().id(customerEntity.getUuid()).message(Constants.LOGOUT_MESSAGE);
+        final LogoutResponse logoutResponse = new LogoutResponse().id(customerEntity.getUuid()).message(Constants.LOGOUT_MESSAGE);
         return new ResponseEntity<LogoutResponse>(logoutResponse, HttpStatus.OK);
     }
 
@@ -129,13 +129,13 @@ public class CustomerController {
         if (FoodAppUtil.isEmptyField(updateCustomerRequest.getFirstName())) {
             throw new UpdateCustomerException(UCR_002.getCode(), UCR_002.getDefaultMessage());
         }
-        String accessToken = getAccessToken(authorization);
-        CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+        final String accessToken = getAccessToken(authorization);
+        final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         customerEntity.setFirstName(updateCustomerRequest.getFirstName());
         customerEntity.setLastName(updateCustomerRequest.getLastName());
         CustomerEntity updatedCustomerEntity = customerService.updateCustomer(customerEntity);
 
-        UpdateCustomerResponse updateCustomerResponse = new UpdateCustomerResponse()
+        final UpdateCustomerResponse updateCustomerResponse = new UpdateCustomerResponse()
                 .id(updatedCustomerEntity.getUuid())
                 .status(Constants.UPDATE_CUSTOMER_MESSAGE)
                 .firstName(updatedCustomerEntity.getFirstName())
@@ -168,12 +168,12 @@ public class CustomerController {
             throw new UpdateCustomerException(UCR_003.getCode(), UCR_003.getDefaultMessage());
         }
 
-        String accessToken = getAccessToken(authorization);
-        CustomerEntity customerEntity = customerService.getCustomer(accessToken);
-        CustomerEntity updatedCustomerEntity = customerService.updateCustomerPassword(
+        final String accessToken = getAccessToken(authorization);
+        final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+        final CustomerEntity updatedCustomerEntity = customerService.updateCustomerPassword(
                 oldPass, newPass, customerEntity);
 
-        UpdatePasswordResponse updatePasswordResponse = new UpdatePasswordResponse()
+        final UpdatePasswordResponse updatePasswordResponse = new UpdatePasswordResponse()
                 .id(updatedCustomerEntity.getUuid())
                 .status(Constants.UPDATE_PASSWORD_MESSAGE);
 
@@ -187,7 +187,7 @@ public class CustomerController {
      * @return
      */
     private CustomerEntity convertToCustomerEntity(final SignupCustomerRequest signupCustomerRequest) {
-        CustomerEntity customerEntity = modelMapper.map(signupCustomerRequest, CustomerEntity.class);
+        final CustomerEntity customerEntity = modelMapper.map(signupCustomerRequest, CustomerEntity.class);
         customerEntity.setUuid(UUID.randomUUID().toString());
         return customerEntity;
 
