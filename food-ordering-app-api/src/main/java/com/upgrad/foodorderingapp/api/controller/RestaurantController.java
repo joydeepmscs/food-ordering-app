@@ -40,6 +40,13 @@ public class RestaurantController {
     @Autowired
     private ItemService itemService;
 
+    /**
+     * RestController method called when the request pattern is of type /restaurant"
+     * and the incoming request is of 'GET' type
+     * fetch all restaurants
+     *
+     * @return - ResponseEntity(RestaurantListResponse, HttpStatus.OK)
+     */
     @RequestMapping(method = RequestMethod.GET,path = "/restaurant",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RestaurantListResponse> getAllRestaurants() {
         List<RestaurantEntity> restaurantEntityList = restaurantService.restaurantsByRating();
@@ -47,7 +54,13 @@ public class RestaurantController {
         return new ResponseEntity<RestaurantListResponse>(restaurantListResponse, HttpStatus.OK);
     }
 
-
+    /**
+     * RestController method called when the request pattern is of type /restaurant/name/{reastaurant_name}"
+     * and the incoming request is of 'GET' type
+     * fetch all restaurants matched with reastaurant_name
+     *
+     * @return - ResponseEntity(RestaurantListResponse, HttpStatus.OK)
+     */
     @RequestMapping(method = RequestMethod.GET,path = "/restaurant/name/{restaurant_name}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RestaurantListResponse> getRestaurantsByName(@PathVariable final String restaurant_name) throws RestaurantNotFoundException {
         List<RestaurantEntity> restaurantEntityList = restaurantService.restaurantsByName(restaurant_name);
@@ -55,6 +68,14 @@ public class RestaurantController {
         return new ResponseEntity<RestaurantListResponse>(restaurantListResponse, HttpStatus.OK);
     }
 
+    /**
+     * RestController method called when the request pattern is of type /restaurant/category/{category_id}
+     * and the incoming request is of 'GET' type
+     * fetch all restaurants using category id
+     * @param category_id      - String represents category id
+     * @throws CategoryNotFoundException - if empty or invalid category is passed
+     * @return - ResponseEntity(RestaurantListResponse, HttpStatus.OK)
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/restaurant/category/{category_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RestaurantListResponse> restaurantByUUID( @PathVariable String category_id) throws CategoryNotFoundException {
         List<RestaurantEntity> restaurantEntities = restaurantService.restaurantByCategory(category_id);
@@ -62,6 +83,16 @@ public class RestaurantController {
         return new ResponseEntity<RestaurantListResponse>(restaurantListResponse, HttpStatus.OK);
     }
 
+    /**
+     * RestController method called when the request pattern is of type /restaurant/{restaurantId}
+     * and the incoming request is of 'PUT' type
+     * update the restaurants rating using restaurant id
+     * @param restaurantId     - String represents restaurant Id
+     * @param authorization      - Access token for authentication
+     * @param customerRating   - Customer rating to be updated
+     * @throws AuthorizationFailedException,InvalidRatingException,RestaurantNotFoundException
+     * @return - ResponseEntity(RestaurantDetailsResponse, HttpStatus.OK)
+     */
     @RequestMapping(method = RequestMethod.PUT, path = "/restaurant/{restaurantId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RestaurantUpdatedResponse> restaurantByUUID( @RequestHeader("authorization") final String authorization,@RequestParam("customer_rating") Double customerRating,@PathVariable String restaurantId) throws AuthorizationFailedException,InvalidRatingException,RestaurantNotFoundException {
         String accessToken=FoodAppUtil.getAccessToken(authorization);
@@ -72,7 +103,14 @@ public class RestaurantController {
         return new ResponseEntity<RestaurantUpdatedResponse>(updatedResponse, HttpStatus.OK);
     }
 
-
+    /**
+     * RestController method called when the request pattern is of type /restaurant/{restaurant_id}
+     * and the incoming request is of 'GET' type
+     * fetch all restaurants using category id
+     * @param restaurant_id      - String represents restaurant id
+     * @throws RestaurantNotFoundException - if empty or invalid restaurant id is passed
+     * @return - ResponseEntity(RestaurantDetailsResponse, HttpStatus.OK)
+     */
     @RequestMapping(method = RequestMethod.GET,path = "/restaurant/{restaurant_id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<RestaurantDetailsResponse> getRestaurantsId(@PathVariable final String restaurant_id) throws RestaurantNotFoundException,CategoryNotFoundException {
         RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(restaurant_id);
@@ -103,7 +141,12 @@ public class RestaurantController {
         return new ResponseEntity<RestaurantDetailsResponse>(restaurantDetailsResponse, HttpStatus.OK);
     }
 
-
+    /**
+     * Method to set and get RestaurantListResponse
+     * Input is List<RestaurantEntity>
+     * @param restaurantEntities<RestaurantEntity>      - List of Restaurants
+     * @return - RestaurantListResponse
+     */
     private RestaurantListResponse getRestaurantCategoryDetails(List<RestaurantEntity> restaurantEntities){
         RestaurantListResponse restaurantListResponse = new RestaurantListResponse();
 
@@ -134,6 +177,13 @@ public class RestaurantController {
         }
         return restaurantListResponse;
     }
+
+    /**
+     * Method to set and get ItemList
+     * Input is itemEntity
+     * @param itemEntity      - List of Restaurants
+     * @return - ItemList
+     */
 
     private ItemList setItemList(ItemEntity itemEntity) {
         ItemList itemList = new ItemList();

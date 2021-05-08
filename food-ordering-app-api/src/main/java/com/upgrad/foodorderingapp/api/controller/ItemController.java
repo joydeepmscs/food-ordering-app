@@ -38,6 +38,13 @@ public class ItemController {
     @Autowired
     private RestaurantService restaurantService;
 
+    /**
+     * RestController method called when the request pattern is of type "/item/restaurant//{restaurant_id}"
+     * and the incoming request is of 'GET' type
+     * Retrieve Restaurant items
+     *
+     * @return - ResponseEntity(ItemListResponse, HttpStatus.OK)
+     */
     @RequestMapping(method = RequestMethod.GET,path = "/item/restaurant//{restaurant_id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ItemListResponse> getAllRestaurants(@PathVariable final String restaurant_id) throws RestaurantNotFoundException {
         RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(restaurant_id);
@@ -46,6 +53,12 @@ public class ItemController {
         return new ResponseEntity<ItemListResponse>(itemListResponse, HttpStatus.OK);
     }
 
+    /**
+     * Method to set and return ItemListResponse
+     *
+     * @param List<ItemEntity> - List of itemEntity object
+     * @return - ItemListResponse
+     */
     public ItemListResponse getItemListFromRestaurantItemEntity(List<ItemEntity> itemEntities){
         ItemListResponse itemListResponse = new ItemListResponse();
         for(ItemEntity it:itemEntities){
