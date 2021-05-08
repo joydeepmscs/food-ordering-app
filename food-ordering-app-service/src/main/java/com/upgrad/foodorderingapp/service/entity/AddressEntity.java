@@ -37,6 +37,20 @@ public class AddressEntity implements Serializable {
     @Column(name = "CITY")
     private String city;
 
+
+    public AddressEntity(@NotNull String uuid, String flatBuildingName, String locality, String city, String pincode, StateEntity state) {
+        this.uuid = uuid;
+        this.flatBuildingName = flatBuildingName;
+        this.locality = locality;
+        this.city = city;
+        this.pincode = pincode;
+        this.state = state;
+    }
+
+    public AddressEntity(){}
+
+
+
     @Column(name = "PINCODE")
     private String pincode;
 
@@ -172,4 +186,6 @@ public class AddressEntity implements Serializable {
                 .append("active", active)
                 .toString();
     }
+
 }
+

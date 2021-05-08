@@ -98,4 +98,6 @@ public class StateEntity implements Serializable {
                 .append("stateName", stateName)
                 .toString();
     }
+
 }
+
