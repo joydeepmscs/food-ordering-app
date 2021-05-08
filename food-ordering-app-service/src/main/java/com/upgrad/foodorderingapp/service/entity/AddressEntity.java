@@ -37,20 +37,6 @@ public class AddressEntity implements Serializable {
     @Column(name = "CITY")
     private String city;
 
-
-    public AddressEntity(@NotNull String uuid, String flatBuildingName, String locality, String city, String pincode, StateEntity state) {
-        this.uuid = uuid;
-        this.flatBuildingName = flatBuildingName;
-        this.locality = locality;
-        this.city = city;
-        this.pincode = pincode;
-        this.state = state;
-    }
-
-    public AddressEntity(){}
-
-
-
     @Column(name = "PINCODE")
     private String pincode;
 
@@ -66,6 +52,19 @@ public class AddressEntity implements Serializable {
             joinColumns = @JoinColumn(name = "ADDRESS_ID"),
             inverseJoinColumns = @JoinColumn(name = "CUSTOMER_ID"))
     private List<CustomerEntity> customers;
+
+    public AddressEntity() {
+    }
+
+    public AddressEntity(@NotNull String uuid, String flatBuilNo, String locality, String city, String pincode, StateEntity state) {
+        this.uuid = uuid;
+        this.flatBuildingName = flatBuilNo;
+        this.locality = locality;
+        this.city = city;
+        this.pincode = pincode;
+        this.state = state;
+    }
+
 
     public Integer getId() {
         return id;
