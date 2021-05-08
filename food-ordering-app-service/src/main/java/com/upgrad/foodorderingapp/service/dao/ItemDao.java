@@ -17,6 +17,12 @@ public class ItemDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Get  item details using restuarnt uuid
+     *
+     * @param restaurantId - String represents item uuid
+     * @return - item details using restaurant uuid
+     */
     public List<RestaurantItemEntity> getItemForRestaurantUUID(final String restaurantId){
         log.info("start getting all restaurant items from the database");
         List<RestaurantItemEntity> restaurantItemEntityList = entityManager.createNamedQuery("getAllRestaurantItemsByRestaurantId",RestaurantItemEntity.class)
