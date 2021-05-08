@@ -16,6 +16,11 @@ public enum GenericErrorCode implements ErrorCode {
     SGUR_003("SGR-003", "Invalid contact number!"),
     SGUR_004("SGR-004", "Weak password!"),
     SGUR_005("SGR-005", "Except last name all fields should be filled"),
+    CNF_001("CNF-001","Category id field should not be empty"),
+    CNF_002("CNF-002","No category by this id"),
+    RNF_001("RNF-001","No restaurant by this id"),
+    RNF_002("RNF-002","No restaurant by this id"),
+    RNF_003("RNF-003","Restaurant name field should not be empty"),
     ATH_001("ATH-001", "This contact number has not been registered!"),
     ATH_002("ATH-002", "Invalid Credentials"),
     ATH_003("ATH-003", "Incorrect format of decoded customer name and password"),
@@ -33,6 +38,7 @@ public enum GenericErrorCode implements ErrorCode {
     ANF_005("ANF-005","Address id can not be empty"),
     SAR_001("SAR-001","No field can be empty"),
     SAR_002("SAR-002","Invalid pincode");
+
     private static final Map<String, GenericErrorCode> LOOKUP = new HashMap<String, GenericErrorCode>();
 
     static {
