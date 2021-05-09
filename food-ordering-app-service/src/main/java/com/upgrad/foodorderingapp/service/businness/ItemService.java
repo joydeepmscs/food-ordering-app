@@ -74,17 +74,19 @@ public class ItemService {
                 break;
             }
             for(RestaurantItemEntity rt:restaurantItemEntities){
-                if(rt.getItemEntity().getUuid()==entry.getKey()){
+                if(rt.getItemEntity().getUuid().equals(entry.getKey())){
                     finalList.add(rt);
+                    counter++;
                 }
             }
-            counter++;
+
         }
         for (RestaurantItemEntity rest:restaurantItemEntities){
             if(!finalList.contains(rest) && counter<=5){
                 finalList.add(rest);
+                counter++;
             }
-            counter++;
+
         }
 
         return finalList;
