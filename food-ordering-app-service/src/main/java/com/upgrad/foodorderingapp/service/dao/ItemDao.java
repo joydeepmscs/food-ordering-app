@@ -1,6 +1,7 @@
 package com.upgrad.foodorderingapp.service.dao;
 
 import com.upgrad.foodorderingapp.service.entity.ItemEntity;
+import com.upgrad.foodorderingapp.service.entity.OrderItemEntity;
 import com.upgrad.foodorderingapp.service.entity.RestaurantItemEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,5 +45,9 @@ public class ItemDao {
         catch (NoResultException nre) {
             return null;
         }
+    }
+
+    public List<OrderItemEntity> getItemByRestaurantUUID(String restaurantId){
+        return entityManager.createNamedQuery("itemsByRestaurantId",OrderItemEntity.class).setParameter("id",restaurantId).getResultList();
     }
 }
