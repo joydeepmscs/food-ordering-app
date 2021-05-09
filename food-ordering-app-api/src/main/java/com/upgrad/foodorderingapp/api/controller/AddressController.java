@@ -121,7 +121,6 @@ public class AddressController {
         }
 
         final AddressEntity addressEntity = addressService.getAddressByUUID(addressId, customerEntity);
-        addressEntity.setActive(0);
         final AddressEntity deletedAddressEntity= addressService.deleteAddress(addressEntity);
 
         DeleteAddressResponse deleteAddressResponse = new DeleteAddressResponse()

@@ -3,11 +3,9 @@ package com.upgrad.foodorderingapp.service.businness;
 import com.upgrad.foodorderingapp.service.common.Constants;
 import com.upgrad.foodorderingapp.service.common.FoodAppUtil;
 import com.upgrad.foodorderingapp.service.dao.AddressDao;
+import com.upgrad.foodorderingapp.service.dao.OrderDao;
 import com.upgrad.foodorderingapp.service.dao.StateDao;
-import com.upgrad.foodorderingapp.service.entity.AddressEntity;
-import com.upgrad.foodorderingapp.service.entity.CustomerAddressEntity;
-import com.upgrad.foodorderingapp.service.entity.CustomerEntity;
-import com.upgrad.foodorderingapp.service.entity.StateEntity;
+import com.upgrad.foodorderingapp.service.entity.*;
 import com.upgrad.foodorderingapp.service.exception.AddressNotFoundException;
 import com.upgrad.foodorderingapp.service.exception.AuthorizationFailedException;
 import com.upgrad.foodorderingapp.service.exception.SaveAddressException;
@@ -31,7 +29,8 @@ public class AddressService {
     private AddressDao addressDao;
     @Autowired
     private StateDao stateDao;
-
+    @Autowired
+    private OrderDao orderDao;
     /**
      * Method to get a State by uuid from db
      *
@@ -131,14 +130,23 @@ public class AddressService {
     }
 
     /**
-     * Method to soft delete address
+     * Method to delete address
      * @param addressEntity
      * @return
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    public AddressEntity deleteAddress(AddressEntity addressEntity) {
-        log.debug("****** Inside deleteAddress *******");
-        return addressDao.deleteAddress(addressEntity);
+    public AddressEntity deleteAddress(final AddressEntity addressEntity) {
+        log.debug("****** Starting deleteAddress *******");
+        final List<OrderEntity> orderEntities = orderDao.getOrdersByAddress(addressEntity);
+        if (!orderEntities.isEmpty()) {
+            addressEntity.setActive(0);
+            log.info("set address to inactive");
+            return addressDao.updateAddress(addressEntity);
+        } else {
+            addressDao.deleteAddress(addressEntity);
+            log.debug("address deleted successfully");
+            return addressEntity;
+        }
     }
     /**
      * Method to retrieve all the states

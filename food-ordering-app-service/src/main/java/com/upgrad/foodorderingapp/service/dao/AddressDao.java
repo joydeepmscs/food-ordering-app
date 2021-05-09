@@ -80,13 +80,25 @@ public class AddressDao {
     }
 
     /**
-     * Method to soft delete AddressEntity from the db
+     * Method to delete AddressEntity from the db
      *
      * @param addressEntity
      */
     public AddressEntity deleteAddress(final AddressEntity addressEntity) {
-        entityManager.merge(addressEntity);
-        log.info("Address successfully deleted(soft) from db");
+        entityManager.remove(addressEntity);
+        log.info("Address successfully deleted from db");
         return addressEntity;
     }
+
+    /**
+     * Method to update Address in the database
+     *
+     * @param addressEntity
+     * @return
+     */
+    public AddressEntity updateAddress(final AddressEntity addressEntity) {
+        log.info("Address successfully updated");
+        return entityManager.merge(addressEntity);
+    }
+
 }
