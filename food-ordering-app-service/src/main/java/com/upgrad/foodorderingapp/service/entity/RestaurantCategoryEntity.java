@@ -10,8 +10,8 @@ import java.io.Serializable;
         {
                 @NamedQuery(name = "getAllRestaurantCategories",
                         query = "select re from RestaurantCategoryEntity re"),
-                @NamedQuery(name = "getAllCategoryItemsByRestaurantuuid", query = "select re from RestaurantCategoryEntity re where re.restaurantEntity.uuid=:uuid"),
-                @NamedQuery(name = "getRestaurantsByCategory", query = "select rc from RestaurantCategoryEntity rc where rc.categoryEntity.uuid =:categoryUuid")
+                @NamedQuery(name = "getAllCategoryItemsByRestaurantuuid", query = "select re from RestaurantCategoryEntity re where re.restaurantEntity.uuid=:uuid order by re.categoryEntity.categoryName"),
+                @NamedQuery(name = "getRestaurantsByCategory", query = "select rc from RestaurantCategoryEntity rc where rc.categoryEntity.uuid =:categoryUuid order by rc.restaurantEntity.restaurantName")
 
         }
 )
