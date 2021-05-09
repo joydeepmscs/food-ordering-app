@@ -114,8 +114,7 @@ public class RestExceptionHandler {
          * @return
          */
         @ExceptionHandler(RestaurantNotFoundException.class)
-        public ResponseEntity<ErrorResponse> categoryNotFoundException(
-                final RestaurantNotFoundException excp, final WebRequest request) {
+        public ResponseEntity<ErrorResponse> categoryNotFoundException(final RestaurantNotFoundException excp, final WebRequest request) {
             return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(excp.getCode())
                     .message(excp.getErrorMessage()), HttpStatus.NOT_FOUND);
         }
@@ -130,5 +129,11 @@ public class RestExceptionHandler {
                 final PaymentMethodNotFoundException excp, final WebRequest request) {
             return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(excp.getCode())
                     .message(excp.getErrorMessage()), HttpStatus.NOT_FOUND);
+
+        @ExceptionHandler(InvalidRatingException.class)
+        public ResponseEntity<ErrorResponse> ratingNotFoundException(final InvalidRatingException excp, final WebRequest request) {
+            return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(excp.getCode())
+                    .message(excp.getErrorMessage()), HttpStatus.BAD_REQUEST);
+
         }
 }

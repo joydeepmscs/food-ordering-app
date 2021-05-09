@@ -31,7 +31,6 @@ public class AddressController {
 
     @Autowired
     private AddressService addressService;
-
     @Autowired
     private CustomerService customerService;
     @Autowired
@@ -54,12 +53,12 @@ public class AddressController {
             throws AuthorizationFailedException, SaveAddressException, AddressNotFoundException {
 
         String accessToken = FoodAppUtil.getAccessToken(authorization);
-        CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+        final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         AddressEntity addressEntity = convertToAddressEntity(saveAddressRequest);
-        StateEntity state = addressService.getStateByUUID(saveAddressRequest.getStateUuid());
+        final StateEntity state = addressService.getStateByUUID(saveAddressRequest.getStateUuid());
         addressEntity.setState(state);
 
-        AddressEntity savedAddressEntity = addressService.saveAddress(addressEntity, customerEntity);
+        final AddressEntity savedAddressEntity = addressService.saveAddress(addressEntity, customerEntity);
 
         SaveAddressResponse saveAddressResponse = new SaveAddressResponse()
                 .id(savedAddressEntity.getUuid())
@@ -80,11 +79,11 @@ public class AddressController {
     public ResponseEntity<AddressListResponse> getAllAddress(@RequestHeader("authorization") final String authorization)
             throws AuthorizationFailedException {
 
-        String accessToken = FoodAppUtil.getAccessToken(authorization);
-        CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+        final String accessToken = FoodAppUtil.getAccessToken(authorization);
+        final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
 
-        List<AddressEntity> addressEntityList = addressService.getAllAddress(customerEntity);
-        List<AddressList> addressList = new ArrayList<>();
+        final List<AddressEntity> addressEntityList = addressService.getAllAddress(customerEntity);
+        final List<AddressList> addressList = new ArrayList<>();
         if (!addressEntityList.isEmpty()) {
             addressEntityList.forEach(
                     address -> addressList.add(convertToAddressList(address)));
@@ -113,16 +112,16 @@ public class AddressController {
                                                                     @PathVariable("address_id") final String addressId)
             throws AuthorizationFailedException, AddressNotFoundException {
 
-        String accessToken = FoodAppUtil.getAccessToken(authorization);
-        CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+        final String accessToken = FoodAppUtil.getAccessToken(authorization);
+        final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
 
         // Throws exception if the address UUID is not present
         if (FoodAppUtil.isEmptyField(addressId)) {
             throw new AddressNotFoundException(ANF_005.getCode(), ANF_005.getDefaultMessage());
         }
 
-        AddressEntity addressEntity = addressService.getAddressByUUID(addressId, customerEntity);
-        AddressEntity deletedAddressEntity= addressService.deleteAddress(addressEntity);
+        final AddressEntity addressEntity = addressService.getAddressByUUID(addressId, customerEntity);
+        final AddressEntity deletedAddressEntity= addressService.deleteAddress(addressEntity);
 
         DeleteAddressResponse deleteAddressResponse = new DeleteAddressResponse()
                 .id(UUID.fromString(deletedAddressEntity.getUuid()))
@@ -141,9 +140,9 @@ public class AddressController {
 
     public ResponseEntity<StatesListResponse> getAllStates() {
 
-        List<StateEntity> stateEntities = addressService.getAllStates();
+        final List<StateEntity> stateEntities = addressService.getAllStates();
         if (!stateEntities.isEmpty()) {
-            List<StatesList> stateList = new ArrayList<>();
+            final List<StatesList> stateList = new ArrayList<>();
             stateEntities.forEach(stateEntity -> {
                 StatesList state = new StatesList()
                         .id(UUID.fromString(stateEntity.getUuid()))
@@ -151,7 +150,7 @@ public class AddressController {
                 stateList.add(state);
             });
 
-            StatesListResponse statesListResponse = new StatesListResponse().states(stateList);
+            final StatesListResponse statesListResponse = new StatesListResponse().states(stateList);
             return new ResponseEntity<StatesListResponse>(statesListResponse, HttpStatus.OK);
         } else
             //Return empty set if stateEntities is empty.
@@ -165,7 +164,7 @@ public class AddressController {
      * @return
      */
     private AddressEntity convertToAddressEntity(final SaveAddressRequest saveAddressRequest) {
-        AddressEntity addressEntity = modelMapper.map(saveAddressRequest, AddressEntity.class);
+        final AddressEntity addressEntity = modelMapper.map(saveAddressRequest, AddressEntity.class);
         addressEntity.setUuid(UUID.randomUUID().toString());
         addressEntity.setActive(1);
         return addressEntity;
@@ -179,7 +178,7 @@ public class AddressController {
      * @return
      */
     private AddressList convertToAddressList(final AddressEntity addressEntity) {
-        AddressList addressList = modelMapper.map(addressEntity, AddressList.class);
+        final AddressList addressList = modelMapper.map(addressEntity, AddressList.class);
         addressList.setId(UUID.fromString(addressEntity.getUuid()));
         addressList.getState().setId(UUID.fromString(addressEntity.getState().getUuid()));
         return addressList;

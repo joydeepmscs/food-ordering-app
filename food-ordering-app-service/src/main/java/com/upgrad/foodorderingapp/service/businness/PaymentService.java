@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.PNF_002;
 
 @Service
 public class PaymentService {

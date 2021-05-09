@@ -4,8 +4,6 @@ import com.upgrad.foodorderingapp.service.entity.CouponEntity;
 import com.upgrad.foodorderingapp.service.entity.OrderEntity;
 import com.upgrad.foodorderingapp.service.entity.OrderItemEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
