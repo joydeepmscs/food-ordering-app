@@ -81,13 +81,6 @@ public class ItemService {
             }
 
         }
-        for (RestaurantItemEntity rest:restaurantItemEntities){
-            if(!finalList.contains(rest) && counter<=5){
-                finalList.add(rest);
-                counter++;
-            }
-
-        }
 
         return finalList;
     }
