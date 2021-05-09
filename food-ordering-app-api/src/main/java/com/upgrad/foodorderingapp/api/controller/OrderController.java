@@ -18,6 +18,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.INF_003;
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.RNF_003;
+
 @RestController
 @CrossOrigin
 public class OrderController {
@@ -156,6 +159,9 @@ public class OrderController {
         }
         payment = paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
         address = addressService.getAddressByUUID(saveOrderRequest.getAddressId(), loggedInCustomer);
+        if(saveOrderRequest.getRestaurantId()==null) {
+            throw new RestaurantNotFoundException(RNF_003.getCode(), RNF_003.getDefaultMessage());
+        }
         restaurant = restaurantService.restaurantByUUID(saveOrderRequest.getRestaurantId().toString());
 
 
@@ -173,6 +179,9 @@ public class OrderController {
 
         List<ItemQuantity> itemQuantities = saveOrderRequest.getItemQuantities();
         for(ItemQuantity itemQuantity: itemQuantities) {
+            if(itemQuantity.getItemId()==null) {
+                throw new RestaurantNotFoundException(INF_003.getCode(), INF_003.getDefaultMessage());
+            }
             ItemEntity item = itemService.getItemByUUID(itemQuantity.getItemId().toString());
             OrderItemEntity orderItem = new OrderItemEntity();
             orderItem.setItemId(item);

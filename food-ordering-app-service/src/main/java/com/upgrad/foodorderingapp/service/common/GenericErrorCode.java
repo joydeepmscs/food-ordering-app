@@ -32,7 +32,6 @@ public enum GenericErrorCode implements ErrorCode {
     UCR_002("UCR-002", "First name field should not be empty"),
     UCR_003("UCR-003", "No field should be empty"),
     UCR_004("UCR-004", "Incorrect old password!"),
-    ANF_001("ANF-001", ""),
     ANF_002("ANF-002", "No state by this id"),
     ANF_003("ANF-003", "No address by this id"),
     ANF_005("ANF-005", "Address id can not be empty"),
