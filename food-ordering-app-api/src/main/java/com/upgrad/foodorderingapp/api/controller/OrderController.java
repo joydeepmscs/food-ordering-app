@@ -18,6 +18,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.INF_003;
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.RNF_003;
+
 @RestController
 @CrossOrigin
 public class OrderController {
@@ -51,7 +54,7 @@ public class OrderController {
      * @throws CouponNotFoundException No coupon by this name or coupon not found
      */
     @RequestMapping(method = RequestMethod.GET, path = "/order/coupon/{coupon_name}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<OrderListCoupon> couponByCouponName(@RequestHeader("authorization") final String authorization, @PathVariable("coupon_name") final String couponName) throws AuthorizationFailedException, CouponNotFoundException {
+    public ResponseEntity<OrderListCoupon> couponByCouponName(@RequestHeader("authorization") final String authorization, @PathVariable(name = "coupon_name", required = false) final String couponName) throws AuthorizationFailedException, CouponNotFoundException {
         String accessToken = FoodAppUtil.getAccessToken(authorization);
         customerService.getCustomer(accessToken);
 
@@ -97,7 +100,7 @@ public class OrderController {
                 orderList.customer(customer);
 
                 OrderListAddress address = new OrderListAddress();
-                address.id(UUID.fromString(pastOrder.getAddress().getUuid())).flatBuildingName(pastOrder.getAddress().toString()).locality(pastOrder.getAddress().toString()).pincode(pastOrder.getAddress().toString());
+                address.id(UUID.fromString(pastOrder.getAddress().getUuid())).flatBuildingName(pastOrder.getAddress().getFlatBuildingName()).locality(pastOrder.getAddress().getLocality()).city(pastOrder.getAddress().getCity()).pincode(pastOrder.getAddress().getPincode());
 
                 OrderListAddressState addressState = new OrderListAddressState();
                 addressState.id(UUID.fromString(pastOrder.getAddress().getState().getUuid())).stateName(pastOrder.getAddress().getState().getStateName());
@@ -143,14 +146,24 @@ public class OrderController {
      * @throws ItemNotFoundException No item by this id exist
      */
     @RequestMapping(method = RequestMethod.POST, path ="/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SaveOrderResponse> saveOrder(@RequestHeader("authorization") final String authorization, @RequestBody SaveOrderRequest saveOrderRequest) throws AuthorizationFailedException, AddressNotFoundException, CouponNotFoundException, RestaurantNotFoundException, PaymentMethodNotFoundException, ItemNotFoundException {
+    public ResponseEntity<SaveOrderResponse> saveOrder(@RequestHeader("authorization") final String authorization, @RequestBody(required = false) SaveOrderRequest saveOrderRequest) throws AuthorizationFailedException, AddressNotFoundException, CouponNotFoundException, RestaurantNotFoundException, PaymentMethodNotFoundException, ItemNotFoundException {
         String accessToken = FoodAppUtil.getAccessToken(authorization);
         CustomerEntity loggedInCustomer = customerService.getCustomer(accessToken);
 
-        CouponEntity coupon = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
-        PaymentEntity payment = paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
-        AddressEntity address = addressService.getAddressByUUID(saveOrderRequest.getAddressId(), loggedInCustomer);
-        RestaurantEntity restaurant = restaurantService.restaurantByUUID(saveOrderRequest.getRestaurantId().toString());
+        CouponEntity coupon = null;
+        PaymentEntity payment;
+        AddressEntity address;
+        RestaurantEntity restaurant;
+        if (saveOrderRequest.getCouponId() != null) {
+            coupon = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
+        }
+        payment = paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
+        address = addressService.getAddressByUUID(saveOrderRequest.getAddressId(), loggedInCustomer);
+        if(saveOrderRequest.getRestaurantId()==null) {
+            throw new RestaurantNotFoundException(RNF_003.getCode(), RNF_003.getDefaultMessage());
+        }
+        restaurant = restaurantService.restaurantByUUID(saveOrderRequest.getRestaurantId().toString());
+
 
         OrderEntity order = new OrderEntity();
         order.setUuid(UUID.randomUUID().toString());
@@ -166,6 +179,9 @@ public class OrderController {
 
         List<ItemQuantity> itemQuantities = saveOrderRequest.getItemQuantities();
         for(ItemQuantity itemQuantity: itemQuantities) {
+            if(itemQuantity.getItemId()==null) {
+                throw new RestaurantNotFoundException(INF_003.getCode(), INF_003.getDefaultMessage());
+            }
             ItemEntity item = itemService.getItemByUUID(itemQuantity.getItemId().toString());
             OrderItemEntity orderItem = new OrderItemEntity();
             orderItem.setItemId(item);
