@@ -14,7 +14,7 @@ import java.util.List;
 @NamedQueries(
         {
                 @NamedQuery(name = "addressByUuid",
-                        query = "select a from AddressEntity a where a.uuid = :addressUuid"),
+                        query = "select a from AddressEntity a where a.uuid = :addressUuid and a.active=1"),
         }
 )
 public class AddressEntity implements Serializable {
