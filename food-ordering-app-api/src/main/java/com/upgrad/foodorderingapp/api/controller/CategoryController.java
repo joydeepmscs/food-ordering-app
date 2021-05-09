@@ -5,10 +5,7 @@ import com.upgrad.foodorderingapp.api.model.CategoryDetailsResponse;
 import com.upgrad.foodorderingapp.api.model.CategoryListResponse;
 import com.upgrad.foodorderingapp.api.model.ItemList;
 import com.upgrad.foodorderingapp.service.businness.CategoryService;
-import com.upgrad.foodorderingapp.service.businness.CustomerService;
-import com.upgrad.foodorderingapp.service.common.ItemType;
 import com.upgrad.foodorderingapp.service.entity.CategoryEntity;
-import com.upgrad.foodorderingapp.service.entity.CategoryItemEntity;
 import com.upgrad.foodorderingapp.service.entity.ItemEntity;
 import com.upgrad.foodorderingapp.service.exception.CategoryNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -16,16 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import com.upgrad.foodorderingapp.api.model.ItemList.ItemTypeEnum.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/category")
+@RequestMapping("")
 public class CategoryController {
 
     @Autowired
@@ -33,7 +29,14 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @RequestMapping(method = RequestMethod.GET,path = "",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    /**
+     * RestController method called when the request pattern is of type "/category"
+     * and the incoming request is of 'GET' type
+     * Retrieve category list order by name
+     *
+     * @return - ResponseEntity(CategoriesListResponse, HttpStatus.OK)
+     */
+    @RequestMapping(method = RequestMethod.GET,path = "/category",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CategoriesListResponse> getAllCategoriesOrderedByName() throws CategoryNotFoundException {
         List<CategoryEntity> allCategories = categoryService.getAllCategoriesOrderedByName();
         CategoriesListResponse categoriesListResponse=new CategoriesListResponse();
@@ -53,8 +56,17 @@ public class CategoryController {
         return new ResponseEntity<CategoriesListResponse>(categoriesListResponse, HttpStatus.OK);
     }
 
-
-    @RequestMapping(method = RequestMethod.GET, path = "/{category_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    /**
+     * RestController method called when the request pattern is of type "/order/coupon/{coupon_name}"
+     * and the incoming request is of 'GET' type
+     * Retrieve coupon details using coupon name
+     *
+     * @param category_id - This represents coupon name
+     * @return - ResponseEntity(CouponDetailsResponse, HttpStatus.OK)
+     * @throws CategoryNotFoundException - if incorrect/ invalid category id is sent,
+     *                                   *                                      or the category id doesn't exist
+     */
+    @RequestMapping(method = RequestMethod.GET, path = "/category/{category_id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CategoryDetailsResponse> getCategoryById(@PathVariable String category_id) throws CategoryNotFoundException {
         CategoryEntity categoryEntity = categoryService.getCategoryById(category_id);
         List<ItemEntity> itemEntities = categoryEntity.getItems();

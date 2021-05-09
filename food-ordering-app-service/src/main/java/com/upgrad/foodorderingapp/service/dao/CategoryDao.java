@@ -2,7 +2,6 @@ package com.upgrad.foodorderingapp.service.dao;
 
 import com.upgrad.foodorderingapp.service.entity.CategoryEntity;
 import com.upgrad.foodorderingapp.service.entity.CategoryItemEntity;
-import com.upgrad.foodorderingapp.service.entity.CustomerAuthEntity;
 import com.upgrad.foodorderingapp.service.entity.RestaurantCategoryEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

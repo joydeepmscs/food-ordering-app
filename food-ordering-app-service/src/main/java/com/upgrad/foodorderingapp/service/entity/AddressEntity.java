@@ -14,7 +14,7 @@ import java.util.List;
 @NamedQueries(
         {
                 @NamedQuery(name = "addressByUuid",
-                        query = "select a from AddressEntity a where a.uuid = :addressUuid"),
+                        query = "select a from AddressEntity a where a.uuid = :addressUuid and a.active=1"),
         }
 )
 public class AddressEntity implements Serializable {
@@ -53,16 +53,18 @@ public class AddressEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "CUSTOMER_ID"))
     private List<CustomerEntity> customers;
 
-    public AddressEntity() { }
+    public AddressEntity() {
+    }
 
-    public AddressEntity(@NotNull String uuid, String flatBuildingName, String locality, String city, String pincode, StateEntity state) {
+    public AddressEntity(@NotNull String uuid, String flatBuilNo, String locality, String city, String pincode, StateEntity state) {
         this.uuid = uuid;
-        this.flatBuildingName = flatBuildingName;
+        this.flatBuildingName = flatBuilNo;
         this.locality = locality;
         this.city = city;
         this.pincode = pincode;
         this.state = state;
     }
+
 
     public Integer getId() {
         return id;
@@ -183,4 +185,6 @@ public class AddressEntity implements Serializable {
                 .append("active", active)
                 .toString();
     }
+
 }
+

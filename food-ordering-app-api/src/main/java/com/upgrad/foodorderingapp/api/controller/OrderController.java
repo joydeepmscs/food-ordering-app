@@ -18,8 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
-
 @RestController
 @CrossOrigin
 public class OrderController {

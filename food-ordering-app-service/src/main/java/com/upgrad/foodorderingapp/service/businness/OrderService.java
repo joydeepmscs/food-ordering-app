@@ -11,11 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
-import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.CPF_001;
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.CPF_002;
 
 @Service
 public class OrderService {

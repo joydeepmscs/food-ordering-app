@@ -10,9 +10,12 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
-@Table(name="orders")
+@Table(name = "orders")
 @NamedQueries({
-        @NamedQuery(name = "getPastOrders", query = "select o from OrderEntity o where o.customer.uuid = :customerUUID order by o.date desc")
+        @NamedQuery(name = "getPastOrders",
+                query = "select o from OrderEntity o where o.customer.uuid = :customerUUID order by o.date desc"),
+        @NamedQuery(name = "ordersByAddress",
+                query = "select o from OrderEntity o where o.address.uuid = :addressUuid")
 })
 public class OrderEntity {
 
@@ -37,7 +40,7 @@ public class OrderEntity {
     @Column(name = "discount")
     @ColumnDefault("0")
     @NotNull
-    private Double discount=0.0;
+    private Double discount = 0.0;
 
     @Column(name = "date")
     @NotNull
@@ -62,7 +65,8 @@ public class OrderEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private RestaurantEntity restaurant;
 
-    public OrderEntity() {}
+    public OrderEntity() {
+    }
 
     public OrderEntity(@NotNull @Size(max = 200) String uuid, @NotNull Double bill, CouponEntity couponId, @NotNull Double discount, @NotNull Date date, PaymentEntity paymentId, CustomerEntity customer, AddressEntity address, RestaurantEntity restaurant) {
         this.uuid = uuid;

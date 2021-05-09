@@ -10,13 +10,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "category")
 @NamedQueries(
         {
-                @NamedQuery(name = "getAllCategory", query = "select ct from CategoryEntity ct"),
+                @NamedQuery(name = "getAllCategory", query = "select ct from CategoryEntity ct order by ct.categoryName"),
                 @NamedQuery(name="getCategoryUsingUuid", query = "select ct from CategoryEntity ct where ct.uuid=:uuid"),
 
         }

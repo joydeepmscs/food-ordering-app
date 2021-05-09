@@ -3,7 +3,6 @@ package com.upgrad.foodorderingapp.service.entity;
 import com.upgrad.foodorderingapp.service.common.ItemType;
 
 import javax.persistence.*;
-import javax.print.attribute.standard.MediaSize;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
