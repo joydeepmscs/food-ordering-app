@@ -130,7 +130,7 @@ public class AddressService {
     }
 
     /**
-     * Method to soft delete address
+     * Method to delete address
      * @param addressEntity
      * @return
      */

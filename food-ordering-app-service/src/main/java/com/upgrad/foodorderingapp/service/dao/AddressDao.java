@@ -80,7 +80,7 @@ public class AddressDao {
     }
 
     /**
-     * Method to soft delete AddressEntity from the db
+     * Method to delete AddressEntity from the db
      *
      * @param addressEntity
      */
