@@ -9,7 +9,7 @@ import java.io.Serializable;
 @NamedQueries(
         {
                 @NamedQuery(name = "getAllCategoryItems", query = "select ct from CategoryItemEntity ct"),
-                @NamedQuery(name = "getAllCategoryItemsByUuid", query = "select ct from CategoryItemEntity ct where ct.categoryEntity.uuid=:uuid")
+                @NamedQuery(name = "getAllCategoryItemsByUuid", query = "select ct from CategoryItemEntity ct where ct.categoryEntity.uuid=:uuid order by ct.itemEntity.itemname")
 
         }
 )

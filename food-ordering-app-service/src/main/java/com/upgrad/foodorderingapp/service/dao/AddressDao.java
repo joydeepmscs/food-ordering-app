@@ -3,18 +3,18 @@ package com.upgrad.foodorderingapp.service.dao;
 import com.upgrad.foodorderingapp.service.entity.AddressEntity;
 import com.upgrad.foodorderingapp.service.entity.CustomerAddressEntity;
 import com.upgrad.foodorderingapp.service.entity.CustomerEntity;
-import com.upgrad.foodorderingapp.service.entity.StateEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import java.util.Collections;
 import java.util.List;
 
 @Repository
 public class AddressDao {
-
+    private final Logger log = LoggerFactory.getLogger(AddressDao.class);
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -24,18 +24,11 @@ public class AddressDao {
      * @param addressEntity
      * @return
      */
-    public AddressEntity saveAddress(AddressEntity addressEntity) {
+    public AddressEntity saveAddress(final AddressEntity addressEntity) {
+        log.debug("Saving a new address in the db");
         entityManager.persist(addressEntity);
+        log.info("address persisted successfully");
         return addressEntity;
-    }
-
-    /**
-     * Method to save Customer Address in the database
-     *
-     * @param customerAddressEntity
-     */
-    public void saveCustomerAddr(CustomerAddressEntity customerAddressEntity) {
-        entityManager.persist(customerAddressEntity);
     }
 
     /**
@@ -45,14 +38,10 @@ public class AddressDao {
      * @return
      */
     public List<CustomerAddressEntity> getAllAddress(final CustomerEntity customerEntity) {
-        List<CustomerAddressEntity> addressList = entityManager
+        return entityManager
                 .createNamedQuery("customerAddressByCustomer", CustomerAddressEntity.class)
-                .setParameter("customer", customerEntity)
+                .setParameter("customerId", customerEntity.getId())
                 .getResultList();
-        if (addressList == null) {
-            return Collections.emptyList();
-        }
-        return addressList;
     }
     /**
      * Method to get AddressEntity by UUID from db
@@ -66,24 +55,26 @@ public class AddressDao {
                     .setParameter("addressUuid", addressUuid)
                     .getSingleResult();
         } catch (NoResultException nre) {
+            log.info("No address present with this uuid: {}", addressUuid);
             return null;
         }
     }
 
     /**
-     * Method to retrieve CustomerAddressEntity by customer and address uuid
+     * Method to retrieve CustomerAddressEntity by customer and address Id
      *
      * @param address
      * @param customer
      * @return
      */
-    public CustomerAddressEntity getCustomerAddress(AddressEntity address, CustomerEntity customer) {
+    public CustomerAddressEntity getCustomerAddress(final AddressEntity address,final CustomerEntity customer) {
         try {
             return entityManager.createNamedQuery("customerAddressByCustomerAndAddrId", CustomerAddressEntity.class)
-                    .setParameter("customer", customer)
-                    .setParameter("address", address)
+                    .setParameter("customerId", customer.getId())
+                    .setParameter("addressId", address.getId())
                     .getSingleResult();
         } catch (NoResultException nre) {
+            log.info("No customer address found with the customer and address Id combination: {} ,{} ", customer.getId(),address.getId());
             return null;
         }
     }
@@ -93,7 +84,9 @@ public class AddressDao {
      *
      * @param addressEntity
      */
-    public void deleteAddress(AddressEntity addressEntity) {
+    public AddressEntity deleteAddress(final AddressEntity addressEntity) {
         entityManager.remove(addressEntity);
+        log.info("Address successfully deleted from db");
+        return addressEntity;
     }
 }

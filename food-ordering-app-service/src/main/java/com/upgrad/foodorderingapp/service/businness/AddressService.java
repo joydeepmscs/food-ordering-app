@@ -11,6 +11,8 @@ import com.upgrad.foodorderingapp.service.entity.StateEntity;
 import com.upgrad.foodorderingapp.service.exception.AddressNotFoundException;
 import com.upgrad.foodorderingapp.service.exception.AuthorizationFailedException;
 import com.upgrad.foodorderingapp.service.exception.SaveAddressException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,10 +25,10 @@ import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
 
 @Service
 public class AddressService {
+    private final Logger log = LoggerFactory.getLogger(AddressService.class);
 
     @Autowired
     private AddressDao addressDao;
-
     @Autowired
     private StateDao stateDao;
 
@@ -37,11 +39,14 @@ public class AddressService {
      * @return
      */
     public StateEntity getStateByUUID(final String stateUuid) throws AddressNotFoundException {
-        StateEntity stateEntity = stateDao.getStateByUUID(stateUuid);
+        log.debug("****** Starting getStateByUUID *******");
+        final StateEntity stateEntity = stateDao.getStateByUUID(stateUuid);
         // Throws exception if no state exists in db with the uuid
         if (stateEntity == null) {
+            log.info("no state with the uuid exists in db: {}",stateUuid);
             throw new AddressNotFoundException(ANF_002.getCode(), ANF_002.getDefaultMessage());
         }
+        log.debug("****** Ends getStateByUUID *******");
         return stateEntity;
     }
 
@@ -54,25 +59,27 @@ public class AddressService {
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public AddressEntity saveAddress(final AddressEntity addressEntity, final CustomerEntity customerEntity) throws SaveAddressException {
-
+        log.debug("****** Starting saveAddress *******");
         // Throw exception if any of the required field is Empty
         if (FoodAppUtil.isEmptyField((addressEntity.getFlatBuildingName()))
                 || FoodAppUtil.isEmptyField(addressEntity.getLocality())
                 || FoodAppUtil.isEmptyField(addressEntity.getCity())
                 || FoodAppUtil.isEmptyField(addressEntity.getPincode())
                 || FoodAppUtil.isEmptyField(addressEntity.getUuid())) {
+            log.info("Mandatory address field is empty");
             throw new SaveAddressException(SAR_001.getCode(), SAR_001.getDefaultMessage());
         }
         // Throw exception if the pincode is invalid
         if (!FoodAppUtil.isValidPattern(Constants.PINCODE_PATTERN, addressEntity.getPincode())){
+            log.info("Invalid pincode");
             throw new SaveAddressException(SAR_002.getCode(),SAR_002.getDefaultMessage());
         }
 
-        List<CustomerEntity> customerEntities = new ArrayList<>();
+        final List<CustomerEntity> customerEntities = new ArrayList<>();
         customerEntities.add(customerEntity);
         addressEntity.setCustomers(customerEntities);
-        AddressEntity savedAddressEntity = addressDao.saveAddress(addressEntity);
-
+        final AddressEntity savedAddressEntity = addressDao.saveAddress(addressEntity);
+        log.debug("****** Ends saveAddress *******");
         return savedAddressEntity;
     }
 
@@ -83,12 +90,15 @@ public class AddressService {
      * @return
      */
     public List<AddressEntity> getAllAddress(final CustomerEntity customerEntity) {
-        List<AddressEntity> addressList = new ArrayList<>();
-        List<CustomerAddressEntity> customerAddressEntities = addressDao.getAllAddress(customerEntity);
+        log.debug("****** Starting getAllAddress *******");
+        final List<AddressEntity> addressList = new ArrayList<>();
+        final List<CustomerAddressEntity> customerAddressEntities = addressDao.getAllAddress(customerEntity);
         if (!customerAddressEntities.isEmpty()) {
+            log.debug("customer Address List isn't empty");
             customerAddressEntities.forEach(
                     customerAddressEntity -> addressList.add(customerAddressEntity.getAddress()));
         }
+        log.debug("****** Ends getAllAddress *******");
         return addressList;
     }
     /**
@@ -102,18 +112,21 @@ public class AddressService {
      */
     public AddressEntity getAddressByUUID(final String addressUuid, final CustomerEntity customerEntity)
             throws AddressNotFoundException, AuthorizationFailedException {
-
-        AddressEntity addressEntity = addressDao.getAddressByUUID(addressUuid);
+        log.debug("****** Starting getAddressByUUID *******");
+        final AddressEntity addressEntity = addressDao.getAddressByUUID(addressUuid);
         // Throw exception if no AddressEntity is found by UUID
         if (addressEntity == null) {
+            log.info("address not found by the uuid");
             throw new AddressNotFoundException(ANF_003.getCode(), ANF_003.getDefaultMessage());
         }
 
-        CustomerAddressEntity customerAddressEntity = addressDao.getCustomerAddress(addressEntity, customerEntity);
+        final CustomerAddressEntity customerAddressEntity = addressDao.getCustomerAddress(addressEntity, customerEntity);
         //Throw exception if the address doesn't belong to the customer
         if (customerAddressEntity == null) {
+            log.info("address doesn't belong to the same customer");
             throw new AuthorizationFailedException (ATHR_004.getCode(), ATHR_004.getDefaultMessage());
         }
+        log.debug("****** Ends getAddressByUUID *******");
         return addressEntity;
     }
 
@@ -124,16 +137,16 @@ public class AddressService {
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public AddressEntity deleteAddress(AddressEntity addressEntity) {
-        addressDao.deleteAddress(addressEntity);
-        return addressEntity;
+        log.debug("****** Inside deleteAddress *******");
+        return addressDao.deleteAddress(addressEntity);
     }
     /**
      * Method to retrieve all the states
      * @return
      */
     public List<StateEntity> getAllStates(){
-        List<StateEntity> stateEntities = stateDao.getAllStates();
-        return stateEntities;
+        log.debug("****** Inside getAllStates *******");
+        return stateDao.getAllStates();
     }
 }
 

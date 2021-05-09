@@ -1,10 +1,8 @@
 package com.upgrad.foodorderingapp.service.businness;
 
-import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
+import com.upgrad.foodorderingapp.service.common.FoodAppUtil;
 import com.upgrad.foodorderingapp.service.dao.CategoryDao;
-import com.upgrad.foodorderingapp.service.dao.CustomerDao;
 import com.upgrad.foodorderingapp.service.entity.CategoryEntity;
-import com.upgrad.foodorderingapp.service.entity.CategoryItemEntity;
 import com.upgrad.foodorderingapp.service.entity.RestaurantCategoryEntity;
 import com.upgrad.foodorderingapp.service.exception.CategoryNotFoundException;
 import org.slf4j.Logger;
@@ -14,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.CNF_001;
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.CNF_002;
 
 @Service
 public class CategoryService {
@@ -39,7 +40,7 @@ public class CategoryService {
      * @return - category details using category uuid
      */
     public CategoryEntity getCategoryById(String categoryUuid) throws CategoryNotFoundException {
-        if (categoryUuid==null || categoryUuid=="") {
+        if (FoodAppUtil.isEmptyField(categoryUuid)) {
             throw new CategoryNotFoundException(CNF_001.getCode(), CNF_001.getDefaultMessage());
         }
         CategoryEntity categoryEntity = categoryDao.getCategoryById(categoryUuid);

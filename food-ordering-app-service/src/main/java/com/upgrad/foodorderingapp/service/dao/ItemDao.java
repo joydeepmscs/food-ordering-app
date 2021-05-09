@@ -1,14 +1,14 @@
 package com.upgrad.foodorderingapp.service.dao;
 
-import com.upgrad.foodorderingapp.service.entity.CategoryEntity;
-import com.upgrad.foodorderingapp.service.entity.CategoryItemEntity;
-import com.upgrad.foodorderingapp.service.entity.RestaurantEntity;
+import com.upgrad.foodorderingapp.service.entity.ItemEntity;
+import com.upgrad.foodorderingapp.service.entity.OrderItemEntity;
 import com.upgrad.foodorderingapp.service.entity.RestaurantItemEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
@@ -32,4 +32,22 @@ public class ItemDao {
         return restaurantItemEntityList;
     }
 
+    /**
+     * Retrieves the Item with the matched uuid
+     *
+     * @param itemUUID The uuid of the Item to be searched for
+     * @return The Item Entity present in the Database if found, null otherwise
+     */
+    public ItemEntity getItemByUUID(String itemUUID) {
+        try {
+            return entityManager.createNamedQuery("itemByUUID", ItemEntity.class).setParameter("uuid", itemUUID).getSingleResult();
+        }
+        catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    public List<OrderItemEntity> getItemByRestaurantUUID(String restaurantId){
+        return entityManager.createNamedQuery("itemsByRestaurantId",OrderItemEntity.class).setParameter("id",restaurantId).getResultList();
+    }
 }
