@@ -1,5 +1,6 @@
 package com.upgrad.foodorderingapp.service.dao;
 
+import com.upgrad.foodorderingapp.service.entity.AddressEntity;
 import com.upgrad.foodorderingapp.service.entity.CouponEntity;
 import com.upgrad.foodorderingapp.service.entity.OrderEntity;
 import com.upgrad.foodorderingapp.service.entity.OrderItemEntity;
@@ -93,4 +94,15 @@ public class OrderDao {
         entityManager.persist(orderItemEntity);
         return orderItemEntity;
     }
-}
+    /**
+     * Method to get list of Orders on a particular address
+     * @param addressEntity
+     * @return
+     */
+    public List<OrderEntity> getOrdersByAddress(AddressEntity addressEntity) {
+        return entityManager.createNamedQuery("ordersByAddress", OrderEntity.class)
+                .setParameter("addressUuid", addressEntity.getUuid())
+                .getResultList();
+    }
+
+ }
