@@ -2,6 +2,7 @@ package com.upgrad.foodorderingapp.api.controller;
 
 import com.upgrad.foodorderingapp.api.model.*;
 import com.upgrad.foodorderingapp.service.businness.*;
+import com.upgrad.foodorderingapp.service.common.Constants;
 import com.upgrad.foodorderingapp.service.common.FoodAppUtil;
 import com.upgrad.foodorderingapp.service.entity.*;
 import com.upgrad.foodorderingapp.service.exception.*;
@@ -110,7 +111,7 @@ public class OrderController {
                         ItemQuantityResponse itemQuantityResponse = new ItemQuantityResponse();
                         itemQuantityResponse.quantity(orderItem.getQuantity()).price(orderItem.getPrice());
                         ItemQuantityResponseItem itemQuantityResponseItem = new ItemQuantityResponseItem();
-                        itemQuantityResponseItem.id(UUID.fromString(orderItem.getItemId().getUuid())).itemName(orderItem.getItemId().getItemName()).itemPrice(orderItem.getPrice());
+                        itemQuantityResponseItem.id(UUID.fromString(orderItem.getItemId().getUuid())).itemName(orderItem.getItemId().getItemName()).itemPrice(orderItem.getPrice()).type(ItemQuantityResponseItem.TypeEnum.fromValue(orderItem.getItemId().getType().toString()));
                         itemQuantityResponse.item(itemQuantityResponseItem);
                         orderList.addItemQuantitiesItem(itemQuantityResponse);
                     });
@@ -147,8 +148,8 @@ public class OrderController {
         CustomerEntity loggedInCustomer = customerService.getCustomer(accessToken);
 
         CouponEntity coupon = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
-        AddressEntity address = addressService.getAddressByUUID(saveOrderRequest.getAddressId(), loggedInCustomer);
         PaymentEntity payment = paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
+        AddressEntity address = addressService.getAddressByUUID(saveOrderRequest.getAddressId(), loggedInCustomer);
         RestaurantEntity restaurant = restaurantService.restaurantByUUID(saveOrderRequest.getRestaurantId().toString());
 
         OrderEntity order = new OrderEntity();
@@ -175,7 +176,7 @@ public class OrderController {
         }
 
         SaveOrderResponse response = new SaveOrderResponse();
-        response.id(saveOrder.getUuid()).status("ORDER SUCCESSFULLY PLACED");
+        response.id(saveOrder.getUuid()).status(Constants.ORDER_PLACED_MESSAGE);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
