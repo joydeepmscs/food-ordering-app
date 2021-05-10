@@ -18,8 +18,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.INF_003;
-import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.RNF_003;
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.*;
+import static com.upgrad.foodorderingapp.service.common.GenericErrorCode.PNF_002;
 
 @RestController
 @CrossOrigin
@@ -156,6 +156,9 @@ public class OrderController {
         RestaurantEntity restaurant;
         if (saveOrderRequest.getCouponId() != null) {
             coupon = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
+        }
+        if(saveOrderRequest.getPaymentId()==null) {
+            throw new PaymentMethodNotFoundException(PNF_002.getCode(), PNF_002.getDefaultMessage());
         }
         payment = paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
         address = addressService.getAddressByUUID(saveOrderRequest.getAddressId(), loggedInCustomer);

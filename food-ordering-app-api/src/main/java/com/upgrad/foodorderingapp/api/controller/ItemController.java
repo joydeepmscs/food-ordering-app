@@ -35,7 +35,7 @@ public class ItemController {
      *
      * @return - ResponseEntity(ItemListResponse, HttpStatus.OK)
      */
-    @RequestMapping(method = RequestMethod.GET,path = "/item/restaurant//{restaurant_id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.GET,path = "/item/restaurant/{restaurant_id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ItemListResponse> getAllRestaurants(@PathVariable final String restaurant_id) throws RestaurantNotFoundException {
         RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(restaurant_id);
         List<ItemEntity> itemEntityList = itemService.getItemsByPopularity(restaurantEntity);
