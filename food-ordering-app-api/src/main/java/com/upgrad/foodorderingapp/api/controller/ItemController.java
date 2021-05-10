@@ -46,7 +46,7 @@ public class ItemController {
     /**
      * Method to set and return ItemListResponse
      *
-     * @param List<ItemEntity> - List of itemEntity object
+     * @param itemEntities- List of itemEntity object
      * @return - ItemListResponse
      */
     public ItemListResponse getItemListFromRestaurantItemEntity(List<ItemEntity> itemEntities){
