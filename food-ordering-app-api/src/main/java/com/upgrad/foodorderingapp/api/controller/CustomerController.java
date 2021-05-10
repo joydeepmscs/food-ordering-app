@@ -18,7 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 
 import static com.upgrad.foodorderingapp.service.common.FoodAppUtil.getAccessToken;
@@ -88,6 +90,9 @@ public class CustomerController {
 
         final HttpHeaders headers = new HttpHeaders();
         headers.add("access-token", authEntity.getAccessToken());
+        List<String> header = new ArrayList<>();
+        header.add("access-token");
+        headers.setAccessControlExposeHeaders(header);
         return new ResponseEntity<LoginResponse>(loginResponse, headers, HttpStatus.OK);
 
     }

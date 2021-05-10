@@ -112,6 +112,10 @@ public class AddressService {
     public AddressEntity getAddressByUUID(final String addressUuid, final CustomerEntity customerEntity)
             throws AddressNotFoundException, AuthorizationFailedException {
         log.debug("****** Starting getAddressByUUID *******");
+        // Throws exception if the address UUID is not present
+        if (FoodAppUtil.isEmptyField(addressUuid)) {
+            throw new AddressNotFoundException(ANF_005.getCode(), ANF_005.getDefaultMessage());
+        }
         final AddressEntity addressEntity = addressDao.getAddressByUUID(addressUuid);
         // Throw exception if no AddressEntity is found by UUID
         if (addressEntity == null) {

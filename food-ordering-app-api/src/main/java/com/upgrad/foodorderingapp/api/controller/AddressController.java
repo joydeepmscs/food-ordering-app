@@ -115,11 +115,6 @@ public class AddressController {
         final String accessToken = FoodAppUtil.getAccessToken(authorization);
         final CustomerEntity customerEntity = customerService.getCustomer(accessToken);
 
-        // Throws exception if the address UUID is not present
-        if (FoodAppUtil.isEmptyField(addressId)) {
-            throw new AddressNotFoundException(ANF_005.getCode(), ANF_005.getDefaultMessage());
-        }
-
         final AddressEntity addressEntity = addressService.getAddressByUUID(addressId, customerEntity);
         final AddressEntity deletedAddressEntity= addressService.deleteAddress(addressEntity);
 
