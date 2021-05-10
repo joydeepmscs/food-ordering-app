@@ -1,4 +1,4 @@
-/*
+
 package com.upgrad.foodorderingapp.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,7 @@ import com.upgrad.foodorderingapp.api.model.CustomerOrderResponse;
 import com.upgrad.foodorderingapp.api.model.ItemQuantity;
 import com.upgrad.foodorderingapp.api.model.SaveOrderRequest;
 import com.upgrad.foodorderingapp.service.businness.*;
-import com.upgrad.foodorderingapp.service.entity.CustomerEntity;
+import com.upgrad.foodorderingapp.service.entity.*;
 import com.upgrad.foodorderingapp.service.exception.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -610,4 +611,4 @@ public class OrderControllerTest {
     }
 
 
-}*/
+}

@@ -17,10 +17,10 @@ public class CustomerDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public CustomerEntity createUser(CustomerEntity customerEntity) {
-        log.info("create a new customer in the database");
+    public CustomerEntity createCustomer(final CustomerEntity customerEntity) {
+        log.debug("creating a new customer in the db");
         entityManager.persist(customerEntity);
-        log.info("customer successfully created");
+        log.info("customer persisted successfully");
         return customerEntity;
     }
 
@@ -30,12 +30,13 @@ public class CustomerDao {
      * @param contactNumber
      * @return
      */
-    public CustomerEntity getCustomerByContactNo(String contactNumber) {
+    public CustomerEntity getCustomerByContactNo(final String contactNumber) {
         try {
             return entityManager.createNamedQuery("customerByContactNumber", CustomerEntity.class)
                     .setParameter("contactNo", contactNumber)
                     .getSingleResult();
         } catch (NoResultException nre) {
+            log.error("customer with this contactNo doesn't exist in db: {}",contactNumber);
             return null;
         }
     }
@@ -45,7 +46,7 @@ public class CustomerDao {
      * @param customerAuth - CustomerAuthEntity to be persisted in the database
      *
      */
-    public void createAuthToken(CustomerAuthEntity customerAuth) {
+    public void createAuthToken(final CustomerAuthEntity customerAuth) {
         entityManager.persist(customerAuth);
     }
 
@@ -61,6 +62,7 @@ public class CustomerDao {
                     .setParameter("accessToken", accessToken)
                     .getSingleResult();
         } catch (NoResultException nre) {
+            log.error("customer with this accessToken doesn't exist in db");
             return null;
         }
     }
@@ -72,5 +74,15 @@ public class CustomerDao {
      */
     public void updateCustomerAuth(final CustomerAuthEntity customerAuthEntity) {
         entityManager.merge(customerAuthEntity);
+    }
+
+    /**
+     * Method to update CustomerEntity
+     *
+     * @param customerEntity
+     * @return
+     */
+    public CustomerEntity updateCustomer(final CustomerEntity customerEntity) {
+        return entityManager.merge(customerEntity);
     }
 }
